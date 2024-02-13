@@ -1,0 +1,92 @@
+# Python 3.7.6
+import pandas as pd
+import numpy as np
+import sklearn as sk
+from sklearn.model_selection import train_test_split
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import confusion_matrix, f1_score, accuracy_score
+import matplotlib as mt
+import matplotlib.pyplot as plt
+
+
+data = pd.read_csv('/Users/x/Desktop/DicorceRandomForest/ESS10.csv', header = 0)
+print(data)
+
+#give me the name of the colmun 
+print(data.columns)
+#give me all name of columns without deleting it
+print(data.columns.values)
+#give me indexes of columns
+print(data.columns.get_loc('trstprl')) #24
+print(data.columns.get_loc('trstsci')) #31
+
+#separate colmun indexed 24 till 31
+trust = data.iloc[:,24:31]
+print(trust)
+
+ #give me the data in a new csv file saved in directory
+ trust.to_csv('/Users/x/Desktop/DicorceRandomForest/ESS11.csv')
+ print(trust)
+
+
+#add again the data 
+data = pd.read_csv('/Users/x/Desktop/DicorceRandomForest/ESS10.csv', header = 0)
+
+
+#Just extract column 
+party = data.iloc[:,50]
+print(party)
+party.to_csv('/Users/x/Desktop/DicorceRandomForest/ESS12.csv')
+
+
+#add party to the trust
+print(trust)
+print(party)
+#add party column to the trust columns
+trust['party'] = party
+print(trust)
+
+#save trust 
+trust.to_csv('/Users/x/Desktop/DicorceRandomForest/ESS13.csv')
+print(trust)
+
+#delete rows from 1 till 88
+trust = trust.drop(trust.index[1:30223])
+print(trust)
+
+#delte row number 1
+trust = trust.drop(trust.index[0])
+print(trust)
+trust.to_csv('/Users/x/Desktop/DicorceRandomForest/ESS14.csv')
+
+#delete rows from 1471 till end
+trust = trust.drop(trust.index[1471:])
+print(trust)
+trust.to_csv('/Users/x/Desktop/DicorceRandomForest/ESS15.csv')
+
+#delete last two rows
+trust = trust.drop(trust.index[1470:])
+print(trust)
+#delete last row
+trust = trust.drop(trust.index[1469])
+print(trust)
+trust.to_csv('/Users/x/Desktop/DicorceRandomForest/ESS16.csv')
+print(trust)
+
+#give me columns
+print(trust.columns)
+print(trust.columns.values)
+
+#make columns 0 till 6 as features
+x = trust.iloc[:,0:6]
+print(x)
+y = trust.iloc[:,7]
+print(y)
+
+#split the data into train and test
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size = .50, random_state = 18)
+
+clf = RandomForestClassifier(n_estimators = 100, max_depth = 4, max_features = 3, bootstrap = True, random_state = 18).fit(x_train, y_train)
+prediction = clf.predict(x_test)
+print(prediction)
+accuracy_score(y_test, prediction)
