@@ -6,7 +6,7 @@ from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import confusion_matrix, f1_score, accuracy_score
 import matplotlib as mt
 import matplotlib.pyplot as plt
-
+import lpd
 
 data = pd.read_csv('/Users/x/Desktop/DicorceRandomForest/ESS10.csv', header = 0)
 print(data)
@@ -82,7 +82,7 @@ print(trust)
 ############ IS OK #################
 
 #delte rows if it has 77 or 88 or 99
-filtered_df = df[~df.isin([77, 88, 99, 66, 31, 18]).any(axis=1)]
+filtered_df = trust[~trust.isin([77, 88, 99, 66, 31, 18]).any(axis=1)]
 print(filtered_df)
 filtered_df.to_csv('/Users/x/Desktop/DicorceRandomForest/ESS17.csv')
 
@@ -102,20 +102,25 @@ for i in range(5,11):
     x = x.replace(i,1)
 
 print(x)
-
-x.to_csv('/Users/x/Desktop/DicorceRandomForest/ESS18.csv')
+print(y)
+y.to_csv('/Users/x/Desktop/DicorceRandomForest/ESS18y.csv')
+x.to_csv('/Users/x/Desktop/DicorceRandomForest/ESS18x.csv')
 
 
 #convert y values into 0 and 1 
 # 0 represents not radical right party and 1 represent a radical raight party
 
 
-conditions = [y.isin([1, 2, 4, 5, 6, 7, 8, 10, 11, 12, 14, 15])]
-replacements = [0]
-y_notright = np.where(conditions, replacements, 1)
-y_notright.to_frame()
-print(y_notright)
-y_notright.to_csv('/Users/x/Desktop/DicorceRandomForest/ESS19.csv')
+print(type(y))
+print(type(x))
+
+y = pd.DataFrame(y)
+print(type(y))
+print(y)
+
+y.to_csv('/Users/x/Desktop/DicorceRandomForest/ESS18y.csv')
+x.to_csv('/Users/x/Desktop/DicorceRandomForest/ESS18x.csv')
+
 
 
 numbers_to_replace = [1, 2, 4, 5, 6, 7, 8, 10, 11, 12, 14, 15]
@@ -148,3 +153,54 @@ print(y)
 # type of data
 print(type(y))
 y.to_frame()
+
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size = .25, random_state = 18)
+clf = RandomForestClassifier(n_estimators=100, max_depth=4, max_features=3, bootstrap=True, random_state=18).fit(x_train, y_train.values.ravel())
+
+
+prediction = clf.predict(x_test)
+confusion_matrix(y_test, prediction) 
+accuracy_score(y_test, prediction)
+
+from sklearn.metrics import recall_score, f1_score, precision_score
+
+recall = recall_score(y_test, prediction, average='macro')
+f1 = f1_score(y_test, prediction, average='macro')
+precision = precision_score(y_test, prediction, average='macro')
+print(recall, f1,precision_score)
+accuracy_score(y_test, prediction)
+
+
+# Extract feature importances
+model = RandomForestClassifier()  # Create a Random Forest model
+model.fit(x_train, y_train)  # Train the model
+#check its shape
+print(y_train.shape)
+    #If the shape is something like (n_samples, 1), it means y_train is a column vector.
+
+y_train = np.ravel(y_train)
+
+model.fit(x_train, y_train)  # Train the model
+
+
+feature_importances = model.feature_importances_
+
+# Sort features by importance in descending order
+sorted_indices = np.argsort(feature_importances)[::-1]
+sorted_features = np.array(x_train.columns)[sorted_indices]
+sorted_importances = feature_importances[sorted_indices]
+
+
+# Visualize feature importance
+plt.figure(figsize=(10, 6))
+plt.barh(sorted_features, sorted_importances, color='skyblue')
+plt.xlabel('Feature Importance')
+plt.ylabel('Feature')
+plt.title('Feature Importance in Random Forest Model')
+plt.gca().invert_yaxis()  # Optional: Display most important feature at the top
+plt.tight_layout()
+plt.show()
+
+
+
+
