@@ -1,4 +1,3 @@
-# Python 3.7.6
 import pandas as pd
 import numpy as np
 import sklearn as sk
@@ -54,7 +53,7 @@ print(trust)
 trust = trust.drop(trust.index[1:30223])
 print(trust)
 
-#delte row number 1
+#delete row number 1
 trust = trust.drop(trust.index[0])
 print(trust)
 trust.to_csv('/Users/x/Desktop/DicorceRandomForest/ESS14.csv')
@@ -73,20 +72,79 @@ print(trust)
 trust.to_csv('/Users/x/Desktop/DicorceRandomForest/ESS16.csv')
 print(trust)
 
-#give me columns
+#columns name and data type
 print(trust.columns)
-print(trust.columns.values)
+print(type(trust))
+print(trust)
 
-#make columns 0 till 6 as features
-x = trust.iloc[:,0:6]
+
+
+############ IS OK #################
+
+#delte rows if it has 77 or 88 or 99
+filtered_df = df[~df.isin([77, 88, 99, 66, 31, 18]).any(axis=1)]
+print(filtered_df)
+filtered_df.to_csv('/Users/x/Desktop/DicorceRandomForest/ESS17.csv')
+
+
+x = filtered_df.iloc[:,0:6]
+y = filtered_df.iloc[:,7]
 print(x)
-y = trust.iloc[:,7]
 print(y)
 
-#split the data into train and test
-x_train, x_test, y_train, y_test = train_test_split(x, y, test_size = .50, random_state = 18)
 
-clf = RandomForestClassifier(n_estimators = 100, max_depth = 4, max_features = 3, bootstrap = True, random_state = 18).fit(x_train, y_train)
-prediction = clf.predict(x_test)
-print(prediction)
-accuracy_score(y_test, prediction)
+#convert 0 till 5 to 0 
+for i in range(0,6):
+    x = x.replace(i,0)
+    print(x)
+
+for i in range(5,11):
+    x = x.replace(i,1)
+
+print(x)
+
+x.to_csv('/Users/x/Desktop/DicorceRandomForest/ESS18.csv')
+
+
+#convert y values into 0 and 1 
+# 0 represents not radical right party and 1 represent a radical raight party
+
+
+conditions = [y.isin([1, 2, 4, 5, 6, 7, 8, 10, 11, 12, 14, 15])]
+replacements = [0]
+y_notright = np.where(conditions, replacements, 1)
+y_notright.to_frame()
+print(y_notright)
+y_notright.to_csv('/Users/x/Desktop/DicorceRandomForest/ESS19.csv')
+
+
+numbers_to_replace = [1, 2, 4, 5, 6, 7, 8, 10, 11, 12, 14, 15]
+y.iloc[y['party'].isin(numbers_to_replace), 0] = 0
+
+numbers_to_replace_right = [3,9,13,16,17]
+y.iloc[y['party'].isin(numbers_to_replace_right), 0] = 1
+print(y)
+
+
+y.to_csv('/Users/x/Desktop/DicorceRandomForest/ESS20.csv')
+
+print(x)
+print(y)
+
+
+x = pd.read_csv('/Users/x/Desktop/DicorceRandomForest/ESS18.csv')
+y = pd.read_csv('/Users/x/Desktop/DicorceRandomForest/ESS20.csv')
+print(x)
+print(y)
+print(x.columns)
+print(y.columns)
+
+#delete column Unnamed: 0
+x = x.drop(x.columns[0], axis = 1)
+print(x)
+print(type(x))
+y = y.drop(y.columns[0], axis = 1)
+print(y)
+# type of data
+print(type(y))
+y.to_frame()
