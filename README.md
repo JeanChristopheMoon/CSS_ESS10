@@ -15,4 +15,4 @@ Results
 The F1 and recall scores were around 0.58 percent, with the most crucial criterion being "Trust in the European Parliament."
 
 
-Data Link:https://www.europeansocialsurvey.org/data-portal
+Data Link:https://www.europeansocialsurvey.org/data-portal , https://ess.sikt.no/en/study/412db4fe-c77a-4e98-8ea4-6c19007f551b
