@@ -11,10 +11,10 @@ party_vote_columns = [
 ]
 
 # Path to your input file
-input_file = "your_input_file.csv"  # Replace with your actual input file path
+input_file = "/Users/x/Desktop/LLmScript/RandomForest/ESS11.csv"
 
 # Path for the output file
-output_file = "party_voting_data.csv"  # You can change this name if you prefer
+output_file = "/Users/x/Desktop/LLmScript/RandomForest/party_voting_data.csv"
 
 # Read the CSV file
 try:
