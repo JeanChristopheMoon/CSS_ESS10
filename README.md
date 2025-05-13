@@ -13,3 +13,6 @@ In the file named RandomForest, I attempted to predict votes for radical right p
 Results
 
 The F1 and recall scores were around 0.58 percent, with the most crucial criterion being "Trust in the European Parliament."
+
+
+Data Link:https://www.europeansocialsurvey.org/data-portal
